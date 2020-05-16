@@ -47,8 +47,18 @@ def reverse_string2(string):
         return None
 
 
+def reverse_string3(string):
+    if string and len(string) > 2 and type(string) == str:
+        str_reversed = list(string)
+        str_reversed.reverse()
+        str_reversed = ''.join(str_reversed)
+        return str_reversed
+    else:
+        return None
+
+
 if __name__ == "__main__":
     print("Please enter a string:")
     test_string = input()
-    str_reversed2 = reverse_string2(test_string)
-    print(str_reversed2)
+    str_reversed3 = reverse_string3(test_string)
+    print(str_reversed3)
