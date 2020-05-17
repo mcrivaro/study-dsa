@@ -10,21 +10,62 @@ def merge_sorted_arrays(*arrays):
 
 def merge_sorted_arrays2(arr1, arr2): return sorted([*arr1, *arr2])
 
+# First two solutions are suboptimal, because they sort the array again. slow
+
 
 def merge_sorted_arrays3(arr1, arr2):
     merged_array = []
+    len1 = len2 = 0
     if (type(arr1) is not list and type(arr2) is not list):
         return "no arrays given"
-    if not (arr1 or arr2):
+    else:
         len1, len2 = len(arr1), len(arr2)
+    if not (arr1 or arr2):
         return "empty arrays"
-    # for i in range(0, len())
+    item1 = arr1[0]
+    item2 = arr2[0]
+    while (len1 or len2):
+        if(not len1):
+            merged_array.append(*arr2)
+            return merged_array
+        if(not len2):
+            merged_array.append(*arr1)
+            return merged_array
+        if item1 <= item2:
+            merged_array.append(item1)
+            if len1 > 1:
+                item1 = arr1[1]
+            if len1:
+                del arr1[0]
+                len1 -= 1
+        else:
+            merged_array.append(item2)
+            if len2 > 1:
+                item2 = arr2[1]
+            if len2:
+                del arr2[0]
+                len2 -= 1
+    return(merged_array)
+
+# solution 3: relatively unclean
+
+
+def merge_sorted_arrays4(arr1, arr2):
+    # check, if valid arrays
+    merged_array = []
+    if not len(arr1):
+        return arr2
+    if not len(arr2):
+        return arr1
+    index_arr1 = 0
+    index_arr2 = 0
+
+    return merged_array
 
 
 if __name__ == "__main__":
     new_array = merge_sorted_arrays([0, 3, 4, 31], [4, 6, 30])
     new_array2 = merge_sorted_arrays2([0, 3, 4, 31], [4, 6, 30])
-    new_array3 = merge_sorted_arrays3([0, 3, 4, 31], [4, 6, 30])
     new_array3 = merge_sorted_arrays3([0, 3, 4, 31], [4, 6, 30])
     # print(new_array)
     # print(new_array2)
