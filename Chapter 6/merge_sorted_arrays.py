@@ -49,6 +49,8 @@ def merge_sorted_arrays3(arr1, arr2):
 
 # solution 3: relatively unclean
 
+#  below given solution in python
+
 
 def merge_sorted_arrays4(arr1, arr2):
     # check, if valid arrays
@@ -57,9 +59,20 @@ def merge_sorted_arrays4(arr1, arr2):
         return arr2
     if not len(arr2):
         return arr1
-    index_arr1 = 0
-    index_arr2 = 0
+    index_arr1 = 1
+    index_arr2 = 1
+    arr1_item = arr1[0]
+    arr2_item = arr2[0]
 
+    while arr1_item or arr2_item:
+        if arr1_item is not None and (arr2_item is None or arr1_item <= arr2_item):
+            merged_array.append(arr1_item)
+            arr1_item = arr1[index_arr1] if index_arr1 < len(arr1) else None
+            index_arr1 += 1
+        elif arr2_item is not None and (arr1_item is None or arr1_item >= arr2_item):
+            merged_array.append(arr2_item)
+            arr2_item = arr2[index_arr2] if index_arr2 < len(arr2) else None
+            index_arr2 += 1
     return merged_array
 
 
@@ -67,6 +80,8 @@ if __name__ == "__main__":
     new_array = merge_sorted_arrays([0, 3, 4, 31], [4, 6, 30])
     new_array2 = merge_sorted_arrays2([0, 3, 4, 31], [4, 6, 30])
     new_array3 = merge_sorted_arrays3([0, 3, 4, 31], [4, 6, 30])
-    # print(new_array)
-    # print(new_array2)
+    new_array4 = merge_sorted_arrays4([0, 3, 4, 31], [4, 6, 30])
+    print(new_array)
+    print(new_array2)
     print(new_array3)
+    print(new_array4)
