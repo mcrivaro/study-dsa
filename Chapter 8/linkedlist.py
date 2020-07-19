@@ -27,26 +27,25 @@ class LinkedList():
 
     def insert(self, index, value):
         new_node = Node(value)
-        current_node = self.head
-        foregoing_node = None
-        following_node = None
-        if index == 0 or index < 0:
+        if index <= 0:
             self.prepend(value)
             return self
         # pitfall: index has to be same as current index (not len-1)
         # Since we are going to add a new node, we have to count the new one, too
-        if index == self.length or index > self.length:
+        if index >= self.length:
             self.append(value)
             return self
-        for i in range(0, index+1):
-            if i == index-1:
-                foregoing_node = current_node
-            if i == index:
-                following_node = current_node
-            current_node = current_node.next
+        foregoing_node = self.traverse_to_index(index-1)
+        following_node = self.traverse_to_index(index)
         foregoing_node.next = new_node
         new_node.next = following_node
         self.length += 1
+
+    def traverse_to_index(self, index):
+        current_node = self.head
+        for i in range(0, index):
+            current_node = current_node.next
+        return current_node
 
     def print_list(self):
         arr = []
@@ -70,5 +69,5 @@ if __name__ == "__main__":
     my_linked_list.append(17)
     my_linked_list.prepend(15)
     my_linked_list.print_list()
-    my_linked_list.insert(5, 100)
+    my_linked_list.insert(1, 100)
     my_linked_list.print_list()
