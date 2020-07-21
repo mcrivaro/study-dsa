@@ -35,11 +35,23 @@ class LinkedList():
         if index >= self.length:
             self.append(value)
             return self
-        foregoing_node = self.traverse_to_index(index-1)
+        foregoing_node = self.traverse_to_index(index - 1)
         following_node = self.traverse_to_index(index)
         foregoing_node.next = new_node
         new_node.next = following_node
         self.length += 1
+
+    def remove(self, index):
+        if index < 1:
+            self.head = self.head.next
+        elif index > self.length - 1:
+            self.tail = self.traverse_to_index(self.length - 2)
+            self.tail.next = None
+        else:
+            foregoing_node = self.traverse_to_index(index - 1)
+            following_node = self.traverse_to_index(index + 1)
+            foregoing_node.next = following_node
+        self.length -= 1
 
     def traverse_to_index(self, index):
         current_node = self.head
@@ -70,4 +82,7 @@ if __name__ == "__main__":
     my_linked_list.prepend(15)
     my_linked_list.print_list()
     my_linked_list.insert(1, 100)
+    my_linked_list.print_list()
+    my_linked_list.remove(5)
+    my_linked_list.remove(0)
     my_linked_list.print_list()
