@@ -36,7 +36,7 @@ class LinkedList():
             self.append(value)
             return self
         foregoing_node = self.traverse_to_index(index - 1)
-        following_node = self.traverse_to_index(index)
+        following_node = foregoing_node.next
         foregoing_node.next = new_node
         new_node.next = following_node
         self.length += 1
@@ -49,7 +49,8 @@ class LinkedList():
             self.tail.next = None
         else:
             foregoing_node = self.traverse_to_index(index - 1)
-            following_node = self.traverse_to_index(index + 1)
+            unwanted_node = foregoing_node.next
+            following_node = unwanted_node.next
             foregoing_node.next = following_node
         self.length -= 1
 
