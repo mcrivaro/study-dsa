@@ -61,19 +61,18 @@ class LinkedList():
         return current_node
 
     def reverse(self):
-        new_previous_node = self.head
-        current_node = self.head.next
-        new_previous_node.next = None
-        self.tail = new_previous_node
-        while current_node.next:
-            regular_next_node = current_node.next
-            current_node.next = new_previous_node
-            if regular_next_node.next is None:
-                self.head = regular_next_node
-                self.head.next = current_node
-                return
-            new_previous_node = current_node
-            current_node = regular_next_node
+        if self.length == 1:
+            return self.head
+        first = self.head
+        self.tail = first
+        second = first.next
+        first.next = None
+        while second:
+            third = second.next
+            second.next = first
+            first = second
+            second = third
+        self.head = first
 
     def print_list(self):
         arr = []

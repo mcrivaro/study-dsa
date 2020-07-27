@@ -68,6 +68,8 @@ class DoublyLinkedList():
         return current_node
 
     def reverse(self):
+        if self.length == 1:
+            return self.head
         node = self.head
         while node:
             buf = node.prev
