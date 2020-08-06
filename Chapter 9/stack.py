@@ -41,32 +41,22 @@ class Stack():
 class ArrayStack():
     # This stack is based on arrays and not on linked lists
     def __init__(self):
-        self.top = None
-        self.bottom = None
         self.data = []
-        self.length = 0
+        self.top = lambda: self.data[len(
+            self.data)-1] if len(self.data) > 0 else None
 
     def push(self, value):
         self.data.append(value)
-        self.top = self.data[self.length - 1]
-        if self.length == 1:
-            self.bottom = self.data[0]
-        self.length += 1
+        return self
 
     def pop(self):
-        if self.length < 1:
+        if len(self.data) == 0:
             return None
-        popped_val = self.data.pop(self.length - 1)
-        self.length -= 1
-        if self.length < 1:
-            self.bottom = None
-            self.top = None
         else:
-            self.top = self.data[self.length - 1]
-        return popped_val
+            return self.data.pop()
 
     def peek(self):
-        return self.top
+        return self.top()
 
     def __repr__(self):
         return str(self.__dict__)
