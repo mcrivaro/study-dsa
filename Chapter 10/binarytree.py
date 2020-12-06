@@ -100,55 +100,82 @@ class BinarySearchTree():
         return False
 
     def remove(self, value):
-        previous_node = None
+        # Is node a leaf? -> Delete directly
+        # Does it have one child -> Bypass
+        # Does it have two childs -> Replace by inorder successor
         current_node = self.root
-        if current_node is None:
-            return False
-        while current_node is not None:
+        parent_node = None
+        while current_node:
             if value < current_node.value:
-                previous_node = current_node
+                parent_node = current_node
                 current_node = current_node.left
             elif value > current_node.value:
-                previous_node = current_node
+                parent_node = current_node
                 current_node = current_node.right
-            if value == current_node.value:
-                if not (current_node.left and current_node.right):
-                    #no childs, remove leaf directly
-                    if current_node.value >= previous_node.value:
-                        previous_node.right = None
-                    if current_node.value < previous_node.value:
-                        previous_node.value = None
-                elif (current_node.right and not current_node.left):
-                    # only right child, to linked list style removal
-                    if previous_node.value >= current_node.value:
-                        previous_node.right = current_node.right
+            elif value == current_node.value:
+                #option 1: node is a leaf, zero children -> directly
+                if (not current_node.left) and (not current_node.right):
+                    if parent_node == None:
+                        self.root = None
+                        return True
+                    if current_node.value <= parent_node.value:
+                        parent_node.left = None
                     else:
-                        previous_node.left = current_node.right
-                elif (current_node.left and not current_node.right):
-                    if previous_node.value >= current_node.value:
-                        previous_node.right = current_node.left
-                    else:
-                        previous_node.left = current_node.left
-                elif (current_node.left and current_node.right):
-                    smallest_bigger_child = current_node.right.left
-                    if smallest_bigger_child:
-                        if smallest_bigger_child >= current_node.left:
-                            if current_node.value < previous_node.value:
-                                previous_node.left = smallest_bigger_child
-                                smallest_bigger_child.left = current_node.left
-                                smallest_bigger_child.right = current_node.right.right
-                            else:
-                                previous_node.right = smallest_bigger_child
-                                smallest_bigger_child.left = current_node.left
-                                smallest_bigger_child.right = current_node.right.right
-                    else:
-                        if current_node.value < previous_node.value:
-                            previous_node.left = current_node.right
-                            current_node.right.left = current_node.left
+                        parent_node.right = None
+                    return True
+                #option 2: node has exactly one child -> bypass
+                if (current_node.left and not current_node.right) or (
+                        current_node.right and not current_node.left):
+                    if parent_node == None:
+                        if self.root.left:
+                            self.root = self.root.left
                         else:
-                            previous_node.right = current_node.right
-                            current_node.right.left = current_node.left
-                return True
+                            self.root = self.root.right
+                    if current_node.value < parent_node.value:
+                        if current_node.left:
+                            parent_node.left = current_node.left
+                        else:
+                            parent_node.left = current_node.right
+                    else:
+                        if current_node.left:
+                            parent_node.right = current_node.left
+                        else:
+                            parent_node.right = current_node.right
+                    return True
+                #option 3: node has two children -> replace node with inorder successor
+                # 1. find in order successor
+                # 2. copy value too current_node (set inorder successor as child of the parent_node)
+                # 3. replace the node by the inorder successor like this:
+                #       - remove inorder successor from it's former position (if it has right child, bypass)
+                #       - save its parent and the child and do the bypassing normally. parent.left = inorder_successor.right
+                #       - set children on the now replaced node
+                #       - but only set inorder_successor.right = current_node.right if inorder_successor != current_node.right (resulting in a reference loop)
+                if current_node.left and current_node.right:
+                    inorder_successor = current_node.right
+                    parent_inorder_successor = None
+                    right_child_inorder_successor = None
+                    # if left child of right child is null -> right child is automatically the inorder successor since while loop won't be executed
+                    while inorder_successor.left:
+                        parent_inorder_successor = inorder_successor
+                        inorder_successor = inorder_successor.left
+                        if inorder_successor.left is None:
+                            right_child_inorder_successor = inorder_successor.right
+                    if parent_node is None:
+                        self.root = inorder_successor
+                        parent_inorder_successor.left = right_child_inorder_successor
+                        self.root.left = current_node.left
+                        self.root.right = current_node.right
+                        return True
+                    else:
+                        if inorder_successor.value < parent_node.value:
+                            parent_node.left = inorder_successor
+                        else:
+                            parent_node.right = inorder_successor
+                        parent_inorder_successor.left = right_child_inorder_successor
+                        if current_node.right != inorder_successor:
+                            inorder_successor.right = current_node.right
+                        inorder_successor.left = current_node.left
+                    return True
 
     def __repr__(self):
         return str(self.__dict__)
